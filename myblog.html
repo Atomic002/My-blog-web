@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Coder - Mobile Developer & UI Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-light: #f8f9fa;
+            --text-dark: #ffffff;
+            --text-light: #1a1a2e;
+            --accent: #6c63ff;
+            --accent-secondary: #a855f7;
+            --card-dark: #16213e;
+            --card-light: #ffffff;
+            --shadow-dark: rgba(108, 99, 255, 0.2);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        body.light-mode {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 20px var(--shadow-dark);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        body.light-mode nav {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px var(--shadow-light);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        body.light-mode .nav-links a {
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(108, 99, 255, 0.1);
+            padding: 0.3rem;
+            border-radius: 20px;
+            border: 1px solid var(--accent);
+        }
+
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            background: transparent;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        body.light-mode .lang-btn {
+            color: var(--text-light);
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05) rotate(15deg);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--accent);
+            transition: all 0.3s;
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 6rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(168, 85, 247, 0.1));
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-text {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--accent);
+            min-height: 2rem;
+            margin: 1rem 0;
+        }
+
+        .typing-text::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            margin: 1.5rem 0;
+            opacity: 0.9;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 5px 15px var(--shadow-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px var(--shadow-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        body.light-mode .btn-secondary {
+            color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .profile-container {
+            text-align: center;
+        }
+
+        .profile-img {
+            width: clamp(150px, 40vw, 250px);
+            height: clamp(150px, 40vw, 250px);
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin: 0 auto;
+            box-shadow: 0 10px 40px var(--shadow-dark);
+            border: 3px solid var(--accent);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .about-text h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .about-text p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .quote {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 10px;
+            font-style: italic;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(168, 85, 247, 0.2));
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--accent);
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .skill-tag:nth-child(1) { animation-delay: 0.1s; }
+        .skill-tag:nth-child(2) { animation-delay: 0.2s; }
+        .skill-tag:nth-child(3) { animation-delay: 0.3s; }
+        .skill-tag:nth-child(4) { animation-delay: 0.4s; }
+        .skill-tag:nth-child(5) { animation-delay: 0.5s; }
+        .skill-tag:nth-child(6) { animation-delay: 0.6s; }
+        .skill-tag:nth-child(7) { animation-delay: 0.7s; }
+        .skill-tag:nth-child(8) { animation-delay: 0.8s; }
+        .skill-tag:nth-child(9) { animation-delay: 0.9s; }
+        .skill-tag:nth-child(10) { animation-delay: 1s; }
+        .skill-tag:nth-child(11) { animation-delay: 1.1s; }
+        .skill-tag:nth-child(12) { animation-delay: 1.2s; }
+
+        .skill-tag:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px var(--shadow-dark);
+            background: var(--accent);
+            color: white;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--card-dark);
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stat-card:nth-child(2) { animation-delay: 0.4s; }
+        .stat-card:nth-child(3) { animation-delay: 0.6s; }
+        .stat-card:nth-child(4) { animation-delay: 0.8s; }
+
+        body.light-mode .stat-card {
+            background: var(--card-light);
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px var(--shadow-dark);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--card-dark);
+            border: 2px solid var(--accent);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        body.light-mode .filter-btn {
+            background: var(--card-light);
+            color: var(--text-light);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-dark);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        body.light-mode .project-card {
+            background: var(--card-light);
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px var(--shadow-dark);
+        }
+
+        .project-img {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 8vw, 4rem);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-category {
+            display: inline-block;
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-title {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: bold;
+        }
+
+        .project-description {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            background: rgba(108, 99, 255, 0.2);
+            padding: 0.4rem 0.9rem;
+            border-radius: 15px;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            border: 1px solid var(--accent);
+            transition: all 0.3s;
+        }
+
+        .tech-badge:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px) scale(1.03);
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .contact-icon {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid rgba(108, 99, 255, 0.3);
+            background: var(--card-dark);
+            color: var(--text-dark);
+            font-family: inherit;
+            transition: all 0.3s;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        body.light-mode .form-group input,
+        body.light-mode .form-group textarea {
+            background: var(--card-light);
+            color: var(--text-light);
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--shadow-dark);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px var(--shadow-dark);
+        }
+
+        .social-btn:hover {
+            transform: scale(1.2) rotate(360deg);
+            box-shadow: 0 8px 25px var(--shadow-dark);
+        }
+
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr 2fr;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background: var(--bg-dark);
+                width: 100%;
+                max-width: 300px;
+                padding: 2rem;
+                transition: right 0.3s;
+                align-items: flex-start;
+                height: calc(100vh - 70px);
+                overflow-y: auto;
+                box-shadow: -5px 0 20px var(--shadow-dark);
+            }
+
+            body.light-mode .nav-links {
+                background: var(--bg-light);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-controls {
+                margin-top: 2rem;
+            }
+
+            section {
+                padding: 5rem 5% 3rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .lang-selector {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                gap: 1.5rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="scrollToSection('home')">Shadow Coder</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="scrollToSection('home')"><span class="nav-text">Bosh sahifa</span></a></li>
+            <li><a onclick="scrollToSection('about')"><span class="nav-text">Men haqimda</span></a></li>
+            <li><a onclick="scrollToSection('projects')"><span class="nav-text">Loyihalar</span></a></li>
+            <li><a onclick="scrollToSection('contact')"><span class="nav-text">Bog'lanish</span></a></li>
+            <div class="nav-controls">
+                <div class="lang-selector">
+                    <button class="lang-btn" onclick="changeLang('en')" data-lang="en">EN</button>
+                    <button class="lang-btn active" onclick="changeLang('uz')" data-lang="uz">UZ</button>
+                    <button class="lang-btn" onclick="changeLang('ru')" data-lang="ru">RU</button>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Shadow Coder</h1>
+            <div class="typing-text" id="typingText"></div>
+            <p class="hero-subtitle"><span class="trans" data-key="hero-subtitle"></span></p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="scrollToSection('projects')"><span class="trans" data-key="view-work"></span></button>
+                <button class="btn btn-secondary" onclick="scrollToSection('contact')"><span class="trans" data-key="contact-me"></span></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="profile-container">
+                    <div class="profile-img">👨‍💻</div>
+                </div>
+                <div class="about-text">
+                    <h2><span class="trans" data-key="about-title"></span></h2>
+                    <p><span class="trans" data-key="about-p1"></span></p>
+                    <p><span class="trans" data-key="about-p2"></span></p>
+                    
+                    <div class="quote">
+                        <strong><span class="trans" data-key="quote"></span></strong>
+                    </div>
+
+                    <h3 style="color: var(--accent); margin-top: 2rem;"><span class="trans" data-key="skills-title"></span></h3>
+                    <div class="skills">
+                        <span class="skill-tag">Flutter</span>
+                        <span class="skill-tag">Dart</span>
+                        <span class="skill-tag">Firebase</span>
+                        <span class="skill-tag">Supabase</span>
+                        <span class="skill-tag">REST API</span>
+                        <span class="skill-tag">BLoC Pattern</span>
+                        <span class="skill-tag">UI/UX Design</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">GitHub</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Swagger</span>
+                        <span class="skill-tag">Google Sign-In</span>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number">20+</div>
+                            <div class="stat-label"><span class="trans" data-key="stat-projects"></span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label"><span class="trans" data-key="stat-apps"></span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">3+</div>
+                            <div class="stat-label"><span class="trans" data-key="stat-experience"></span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">🇺🇿</div>
+                            <div class="stat-label">Qo'qon, O'zbekiston</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><span class="trans" data-key="projects-title"></span></h2>
+                <p><span class="trans" data-key="projects-subtitle"></span></p>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterProjects('all')"><span class="trans" data-key="filter-all"></span></button>
+                    <button class="filter-btn" onclick="filterProjects('flutter')"><span class="trans" data-key="filter-flutter"></span></button>
+                    <button class="filter-btn" onclick="filterProjects('ui')"><span class="trans" data-key="filter-ui"></span></button>
+                    <button class="filter-btn" onclick="filterProjects('auth')"><span class="trans" data-key="filter-auth"></span></button>
+                    <button class="filter-btn" onclick="filterProjects('api')"><span class="trans" data-key="filter-api"></span></button>
+                </div>
+            </div>
+            <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><span class="trans" data-key="contact-title"></span></h2>
+                <p><span class="trans" data-key="contact-subtitle"></span></p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3><span class="trans" data-key="contact-info"></span></h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div>
+                            <strong>Email</strong><br>
+                            <a href="mailto:dadakhonovrahmatullox@gmail.com" style="color: var(--accent);">dadakhonovrahmatullox@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div>
+                            <strong><span class="trans" data-key="phone"></span></strong><br>
+                            <a href="tel:+998990605963" style="color: var(--accent);">+998 99 060 59 63</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>
+                            <strong><span class="trans" data-key="location"></span></strong><br>
+                            Qo'qon, O'zbekiston
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">💬</div>
+                        <div>
+                            <strong>Telegram</strong><br>
+                            <a href="https://t.me/The_Shadow_Coder_Admin" target="_blank" style="color: var(--accent);">@The_Shadow_Coder_Admin</a>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://t.me/The_Shadow_Coder_Admin" class="social-btn" target="_blank" title="Telegram">📱</a>
+                        <a href="https://www.instagram.com/the_shadow_coder/?igsh=NGl1bzFzMWNyYTk1" class="social-btn" target="_blank" title="Instagram">📷</a>
+                        <a href="https://github.com/shadowcoder" class="social-btn" target="_blank" title="GitHub">💻</a>
+                        <a href="mailto:dadakhonovrahmatullox@gmail.com" class="social-btn" title="Email">✉️</a>
+                    </div>
+                </div>
+                <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                    <div class="form-group">
+                        <label><span class="trans" data-key="form-name"></span> *</label>
+                        <input type="text" id="contactName" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span class="trans" data-key="form-email"></span> *</label>
+                        <input type="email" id="contactEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label><span class="trans" data-key="form-message"></span> *</label>
+                        <textarea id="contactMessage" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><span class="trans" data-key="form-submit"></span></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const translations = {
+            en: {
+                'hero-subtitle': 'Hi, I\'m Rahmatullo Dadakhonov, a passionate Flutter & Mobile Developer from Qo\'qon, Uzbekistan 🇺🇿',
+                'view-work': 'View My Work',
+                'contact-me': 'Contact Me',
+                'about-title': 'About Me',
+                'about-p1': 'I\'m Rahmatullo Dadakhonov, known in the tech world as Shadow Coder — a creative mobile developer and digital builder from Uzbekistan.',
+                'about-p2': 'I specialize in creating modern and efficient applications using Flutter, Firebase, Supabase, and REST APIs. My mission is to craft digital experiences that look beautiful and work perfectly.',
+                'quote': '"Code is not just logic — it\'s creativity written in syntax."',
+                'skills-title': 'Core Skills:',
+                'stat-projects': 'Projects Completed',
+                'stat-apps': 'Mobile Apps',
+                'stat-experience': 'Years Experience',
+                'projects-title': 'My Projects',
+                'projects-subtitle': 'Explore my recent work and creative solutions',
+                'filter-all': 'All Projects',
+                'filter-flutter': 'Flutter Apps',
+                'filter-ui': 'UI/UX Design',
+                'filter-auth': 'Authentication',
+                'filter-api': 'API Integration',
+                'contact-title': 'Get In Touch',
+                'contact-subtitle': 'Let\'s work together on your next project',
+                'contact-info': 'Contact Information',
+                'phone': 'Phone',
+                'location': 'Location',
+                'form-name': 'Your Name',
+                'form-email': 'Your Email',
+                'form-message': 'Your Message',
+                'form-submit': 'Send Message'
+            },
+            uz: {
+                'hero-subtitle': 'Salom, men Rahmatullo Dadakhonov, Qo\'qon, O\'zbekistondan ishtiyoqli Flutter va Mobil Dasturchi 🇺🇿',
+                'view-work': 'Ishlarimni ko\'rish',
+                'contact-me': 'Bog\'lanish',
+                'about-title': 'Men haqimda',
+                'about-p1': 'Men Rahmatullo Dadakhonov, texnologiya olamida Shadow Coder nomi bilan tanilgan — O\'zbekistondan ijodkor mobil dasturchi va raqamli yaratuvchi.',
+                'about-p2': 'Men Flutter, Firebase, Supabase va REST API lardan foydalanib zamonaviy va samarali ilovalar yaratish bo\'yicha mutaxassisман. Mening maqsadim - chiroyli va mukammal ishlaydigan raqamli tajribalarni yaratish.',
+                'quote': '"Kod faqat mantiq emas — bu sintaksisda yozilgan ijodkorlik."',
+                'skills-title': 'Asosiy Ko\'nikmalar:',
+                'stat-projects': 'Tugallangan Loyihalar',
+                'stat-apps': 'Mobil Ilovalar',
+                'stat-experience': 'Yillik Tajriba',
+                'projects-title': 'Mening Loyihalarim',
+                'projects-subtitle': 'So\'nggi ishlarim va ijodiy yechimlarim',
+                'filter-all': 'Barcha Loyihalar',
+                'filter-flutter': 'Flutter Ilovalari',
+                'filter-ui': 'UI/UX Dizayn',
+                'filter-auth': 'Autentifikatsiya',
+                'filter-api': 'API Integratsiyasi',
+                'contact-title': 'Bog\'laning',
+                'contact-subtitle': 'Keyingi loyihangizda birgalikda ishlaylik',
+                'contact-info': 'Aloqa Ma\'lumotlari',
+                'phone': 'Telefon',
+                'location': 'Manzil',
+                'form-name': 'Ismingiz',
+                'form-email': 'Emailingiz',
+                'form-message': 'Xabaringiz',
+                'form-submit': 'Xabar Yuborish'
+            },
+            ru: {
+                'hero-subtitle': 'Привет, я Рахматулло Дадахонов, увлеченный Flutter и мобильный разработчик из Коканда, Узбекистан 🇺🇿',
+                'view-work': 'Посмотреть работы',
+                'contact-me': 'Связаться',
+                'about-title': 'Обо мне',
+                'about-p1': 'Я Рахматулло Дадахонов, известный в мире технологий как Shadow Coder — креативный мобильный разработчик и цифровой создатель из Узбекистана.',
+                'about-p2': 'Я специализируюсь на создании современных и эффективных приложений с использованием Flutter, Firebase, Supabase и REST API. Моя миссия — создавать цифровой опыт, который выглядит красиво и работает идеально.',
+                'quote': '"Код — это не просто логика, это креативность, записанная в синтаксисе."',
+                'skills-title': 'Основные навыки:',
+                'stat-projects': 'Завершенных проектов',
+                'stat-apps': 'Мобильных приложений',
+                'stat-experience': 'Лет опыта',
+                'projects-title': 'Мои Проекты',
+                'projects-subtitle': 'Изучите мои последние работы и креативные решения',
+                'filter-all': 'Все проекты',
+                'filter-flutter': 'Flutter приложения',
+                'filter-ui': 'UI/UX дизайн',
+                'filter-auth': 'Аутентификация',
+                'filter-api': 'API интеграция',
+                'contact-title': 'Связаться',
+                'contact-subtitle': 'Давайте работать вместе над вашим следующим проектом',
+                'contact-info': 'Контактная информация',
+                'phone': 'Телефон',
+                'location': 'Местоположение',
+                'form-name': 'Ваше имя',
+                'form-email': 'Ваш Email',
+                'form-message': 'Ваше сообщение',
+                'form-submit': 'Отправить сообщение'
+            }
+        };
+
+        let currentLang = 'uz';
+        let allProjects = [];
+
+        const typingTexts = {
+            en: ['Flutter Developer 💙', 'UI/UX Designer 🎨', 'Mobile App Creator 📱', 'Problem Solver 🧩'],
+            uz: ['Flutter Dasturchisi 💙', 'UI/UX Dizayner 🎨', 'Mobil Ilova Yaratuvchi 📱', 'Muammo Hal Qiluvchi 🧩'],
+            ru: ['Flutter Разработчик 💙', 'UI/UX Дизайнер 🎨', 'Создатель Приложений 📱', 'Решатель Проблем 🧩']
+        };
+
+        let typingIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeText() {
+            const texts = typingTexts[currentLang];
+            const currentText = texts[typingIndex];
+            const typingElement = document.getElementById('typingText');
+
+            if (isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                setTimeout(() => isDeleting = true, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typingIndex = (typingIndex + 1) % texts.length;
+            }
+
+            const speed = isDeleting ? 50 : 100;
+            setTimeout(typeText, speed);
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({ behavior: 'smooth' });
+            
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.querySelector('.hamburger');
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const hamburger = document.querySelector('.hamburger');
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        function changeLang(lang) {
+            currentLang = lang;
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.trans').forEach(el => {
+                const key = el.dataset.key;
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            loadProjects();
+            charIndex = 0;
+            isDeleting = false;
+            typingIndex = 0;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const themeBtn = document.querySelector('.theme-toggle');
+            themeBtn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        function filterProjects(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const filtered = category === 'all' ? allProjects : allProjects.filter(p => p.category === category);
+            displayProjects(filtered);
+        }
+
+        function displayProjects(projects) {
+            const grid = document.getElementById('projectsGrid');
+            if (!projects || projects.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Ma\'lumotlar yuklanmoqda...</p>';
+                return;
+            }
+            
+            grid.innerHTML = projects.map(p => `
+                <div class="project-card">
+                    <div class="project-img">${p.icon}</div>
+                    <div class="project-content">
+                        <span class="project-category">${p.category.toUpperCase()}</span>
+                        <h3 class="project-title">${p.title}</h3>
+                        <p class="project-description">${p.description}</p>
+                        <div class="tech-stack">
+                            ${p.technologies.split(',').map(t => `<span class="tech-badge">${t.trim()}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadProjects() {
+            const projectsData = {
+                en: [
+                    {
+                        title: 'ImkonJob App',
+                        description: 'Full-featured startup project connecting job seekers with employers. Built from scratch with complete authentication.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, UI/UX, Auth',
+                        icon: '💼'
+                    },
+                    {
+                        title: 'Instagram Clone',
+                        description: 'Complete social media app with post carousel, double-tap like animation, comments, and notifications.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, BLoC',
+                        icon: '📸'
+                    },
+                    {
+                        title: 'Prayer Time App',
+                        description: 'Beautiful Islamic prayer times app with custom UI, city-based times, and smooth animations.',
+                        category: 'ui',
+                        technologies: 'Flutter, Custom UI, API',
+                        icon: '🕌'
+                    },
+                    {
+                        title: 'Firebase Auth System',
+                        description: 'Complete authentication system with email/password, email verification, and unique username validation.',
+                        category: 'auth',
+                        technologies: 'Flutter, Firebase Auth',
+                        icon: '🔐'
+                    },
+                    {
+                        title: 'Supabase Integration',
+                        description: 'Implemented Supabase with databases, realtime features, Edge Functions, and API integration.',
+                        category: 'api',
+                        technologies: 'Supabase, Flutter, API',
+                        icon: '☁️'
+                    },
+                    {
+                        title: 'Admin Panel System',
+                        description: 'Comprehensive admin panel for Shadow Coder website with blog, project, and service management.',
+                        category: 'flutter',
+                        technologies: 'Supabase, Firebase, Web',
+                        icon: '⚙️'
+                    }
+                ],
+                uz: [
+                    {
+                        title: 'ImkonJob Ilovasi',
+                        description: 'Ish izlovchilar va ish beruvchilarni bog\'lovchi to\'liq funktsional startap loyiha. 0 dan yaratilgan.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, UI/UX',
+                        icon: '💼'
+                    },
+                    {
+                        title: 'Instagram Kloni',
+                        description: 'To\'liq ijtimoiy tarmoq ilovasi - post carousel, like animatsiyasi, izohlar va bildirishnomalar.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, BLoC',
+                        icon: '📸'
+                    },
+                    {
+                        title: 'Namoz Vaqtlari',
+                        description: 'Chiroyli Islomiy namoz vaqtlari ilovasi - maxsus UI, shahar bo\'yicha vaqtlar va animatsiyalar.',
+                        category: 'ui',
+                        technologies: 'Flutter, Maxsus UI, API',
+                        icon: '🕌'
+                    },
+                    {
+                        title: 'Firebase Auth Tizimi',
+                        description: 'To\'liq autentifikatsiya tizimi - email/parol, email tasdiqlash va noyob foydalanuvchi nomi.',
+                        category: 'auth',
+                        technologies: 'Flutter, Firebase Auth',
+                        icon: '🔐'
+                    },
+                    {
+                        title: 'Supabase Integratsiya',
+                        description: 'Supabase bilan ma\'lumotlar bazalari, realtime xususiyatlar, Edge Functions integratsiyasi.',
+                        category: 'api',
+                        technologies: 'Supabase, Flutter, API',
+                        icon: '☁️'
+                    },
+                    {
+                        title: 'Admin Panel Tizimi',
+                        description: 'Shadow Coder uchun keng qamrovli admin panel - blog va loyiha boshqaruvi.',
+                        category: 'flutter',
+                        technologies: 'Supabase, Firebase, Web',
+                        icon: '⚙️'
+                    }
+                ],
+                ru: [
+                    {
+                        title: 'Приложение ImkonJob',
+                        description: 'Полнофункциональный стартап-проект, соединяющий соискателей с работодателями.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, UI/UX',
+                        icon: '💼'
+                    },
+                    {
+                        title: 'Клон Instagram',
+                        description: 'Полное приложение социальной сети с каруселью постов, анимацией лайков и комментариями.',
+                        category: 'flutter',
+                        technologies: 'Flutter, Firebase, BLoC',
+                        icon: '📸'
+                    },
+                    {
+                        title: 'Время Молитвы',
+                        description: 'Красивое исламское приложение времени молитвы с пользовательским UI и анимациями.',
+                        category: 'ui',
+                        technologies: 'Flutter, Custom UI, API',
+                        icon: '🕌'
+                    },
+                    {
+                        title: 'Система Firebase Auth',
+                        description: 'Полная система аутентификации с email/паролем, подтверждением email и валидацией.',
+                        category: 'auth',
+                        technologies: 'Flutter, Firebase Auth',
+                        icon: '🔐'
+                    },
+                    {
+                        title: 'Интеграция Supabase',
+                        description: 'Реализация Supabase с базами данных, realtime функциями и API интеграцией.',
+                        category: 'api',
+                        technologies: 'Supabase, Flutter, API',
+                        icon: '☁️'
+                    },
+                    {
+                        title: 'Система Admin Panel',
+                        description: 'Комплексная админ-панель для Shadow Coder с управлением блогом и проектами.',
+                        category: 'flutter',
+                        technologies: 'Supabase, Firebase, Web',
+                        icon: '⚙️'
+                    }
+                ]
+            };
+
+            allProjects = projectsData[currentLang];
+            displayProjects(allProjects);
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            const telegramMessage = `🔔 Yangi xabar!\n\n👤 Ism: ${name}\n📧 Email: ${email}\n💬 Xabar: ${message}`;
+            const telegramUrl = `https://t.me/The_Shadow_Coder_Admin?text=${encodeURIComponent(telegramMessage)}`;
+            
+            window.open(telegramUrl, '_blank');
+            
+            event.target.reset();
+            alert('Xabar Telegram orqali yuborilmoqda!');
+        }
+
+        window.addEventListener('load', () => {
+            loadProjects();
+            typeText();
+            changeLang('uz');
+        });
+    </script>
+</body>
+</html>
